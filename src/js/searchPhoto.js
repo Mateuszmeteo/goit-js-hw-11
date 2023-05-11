@@ -1,25 +1,25 @@
 // API request //
 
-import axios from "axios";
+// import axios from "axios";
 
-const valExp = 'dog'
+// const valExp = 'dog'
 
-const inputEl = document.querySelector('input[name = "searchQuery"]')
+// const inputEl = document.querySelector('input[name = "searchQuery"]')
 
-const searchPhoto = async () => {
-    const API_URL = 'https://pixabay.com/api/';
-    const KEY = '36240096-2eba6952fadc15ce6318a051b';
-    const userValue = valExp;
-    const param = 'imagine_type=photo&orientation=horizontal&safesearch=true';
+// const searchPhoto = async () => {
+//     const API_URL = 'https://pixabay.com/api/';
+//     const KEY = '36240096-2eba6952fadc15ce6318a051b';
+//     const userValue = valExp;
+//     const param = 'imagine_type=photo&orientation=horizontal&safesearch=true';
 
-    return await axios.get(`${API_URL}?key=${KEY}&q=${userValue}&${param}`)
-        // .then(response => response.data)
-}
+//     return await axios.get(`${API_URL}?key=${KEY}&q=${userValue}&${param}`)
+//         // .then(response => response.data)
+// }
 
-export {searchPhoto}
+// export {searchPhoto}
 
 
-
+//............//////////////
 
 
 
