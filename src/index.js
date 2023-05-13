@@ -1,4 +1,4 @@
-console.log('lokokok')
+console.log('lokokokokokk')
 
 // import { searchPhoto } from "./js/searchPhoto";
 
@@ -95,6 +95,8 @@ function searchPhoto(pictures) {
     .join('')
 }
 
+
+console.log(searchPhoto)
 
 
 
