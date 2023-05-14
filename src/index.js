@@ -1,249 +1,98 @@
-console.log('lokokokokokk')
-
-// import { searchPhoto } from "./js/searchPhoto";
-
-import axios from "axios";
 import Notiflix from "notiflix";
 
+import SimpleLightbox from "simplelightbox";
+import "simplelightbox/dist/simple-lightbox.min.css";
+
+import { searchPhoto } from "./js/searchPhoto";
+import { galleryMarkup } from "./js/galleryMarkup";
+
+
 const inputEl = document.querySelector('input[name = "searchQuery"]')
-// const inputEl = document.querySelector('#search-form input')
 const btnEl = document.querySelector('button[type = "submit"]')
-// const btnEl = document.querySelector('#search-form button')
+const btnLoad = document.querySelector('.load-more')
 const formEl = document.getElementById('search-form')
 const divEl = document.querySelector('.gallery')
 
 
+
+let query = '';
 let page = 1;
-let perPage = 40;
-let arrPhoto = []
+let simpleLightBox;
+const perPage = 40;
 
+formEl.addEventListener('submit', onSearchForm);
+// loadMoreBtn.addEventListener('click', onLoadMoreBtn);
 
-const featchPhoto = async () => {
-  const API_URL = 'https://pixabay.com/api/';
-  const paramsApi = await axios.get(API_URL, {
-    params: {
-      key: '36240096-2eba6952fadc15ce6318a051b',
-      image_type: 'photo',
-      orientation: 'horizontal',
-      safesearch: true,
-      q: inputEl.value,
-      per_page: perPage,
-      page: page,
-    }
-  })
-  return paramsApi
-}
+// onScroll();
+// onToTopBtn();
 
+function onSearchForm(e) {
+  e.preventDefault();
+  window.scrollTo({ top: 0 });
+  page = 1;
+  query = e.currentTarget.searchQuery.value.trim();
+  formEl.innerHTML = '';
+  // loadMoreBtn.classList.add('is-hidden');
 
-// console.log(featchPhoto)
+  if (query === '') {
+    alertNoEmptySearch();
+    return;
+  }
 
+  searchPhoto(query, page, perPage)
+    .then(({ data }) => {
+      if (data.totalHits === 0) {
+        alertNoImagesFound();
+      } else {
+        galleryMarkup(data.hits);
+        simpleLightBox = new SimpleLightbox('.gallery a').refresh();
+        alertImagesFound(data);
 
-
-
-const loadPhoto = () => {
-  featchPhoto()
-    .then(photo => {
-      let result = photo.data.totalHits
-
-      if(result === 0) {
-        alert('faliure sorry please try again')
-      }else if (result <= page * perPage) {
-        alert('info')
-      }else {
-        alert('success hooray')
+        if (data.totalHits > perPage) {
+          loadMoreBtn.classList.remove('is-hidden');
+        }
       }
     })
-    .catch(err => alert('err alert'))
+    .catch(error => console.log(error))
+    .finally(() => {
+      formEl.reset();
+    });
 }
 
+function onLoadMoreBtn() {
+  page += 1;
+  simpleLightBox.destroy();
 
+  searchPhoto(query, page, perPage)
+    .then(({ data }) => {
+      galleryMarkup(data.hits);
+      simpleLightBox = new SimpleLightbox('.gallery a').refresh();
 
+      const totalPages = Math.ceil(data.totalHits / perPage);
 
-formEl.addEventListener('submit', (e) => {
-  e.preventDefault()
-  // console.log(inputEl.value)
-  loadPhoto()
-})
-
-
-
-function searchPhoto(pictures) {
-  const markup = pictures.data.hits
-  arrPhoto.push(...markup)
-  return arrPhoto 
-    .map(({webformatURL, largeImageURL, tags, likes, views, comments, downloads}) =>
-        `<div class="photo-card">
-          <a href="${largeImageURL}">
-            <img src="${webformatURL}" alt="${tags}" loading="lazy" />
-          </a>
-            <div class="info">
-              <p class="info-item">
-                <b>Likes</b>${likes}
-              </p>
-              <p class="info-item">
-                <b>Views</b>${views}
-              </p>
-              <p class="info-item">
-                <b>Comments</b>${comments}
-              </p>
-              <p class="info-item">
-                <b>Downloads</b>${downloads}
-              </p>
-            </div>
-          </div>`
-    )
-    .join('')
+      if (page > totalPages) {
+        loadMoreBtn.classList.add('is-hidden');
+        alertEndOfSearch();
+      }
+    })
+    .catch(error => console.log(error));
 }
 
-
-console.log(searchPhoto)
-
-
-
-
-
-
-// btnEl.addEventListener('click', (e) => {
-//   e.preventDefault()
-//   // const userValue = inputEl.value
-//    console.log(inputEl.value)
-// }) 
-
-
-
-
-////............../////////////............//////////////
-
-// axios.defaults.baseURL = 'https://pixabay.com/api/';
-// const KEY = '36240096-2eba6952fadc15ce6318a051b';
-// const param = 'imagine_type=photo&orientation=horizontal&safesearch=true';
-
-
-// async function featchPhoto (query) {
-//   return await axios.get(`?key=${KEY}&q=${query}&${param}`)
-//   // return apiString
-// }
-
-// console.log(featchPhoto)
-
-///////............//////////////////..................///////////////
-
-// const featchPhoto = async (userValue) => {
-//     const API_URL = 'https://pixabay.com/api/';
-//     const KEY = '36240096-2eba6952fadc15ce6318a051b';
-//     const userValue = inputEl.value;
-//     // const valExp = 'dog'
-//     // const userValue = valExp
-//     const param = 'imagine_type=photo&orientation=horizontal&safesearch=true';
-
-//     // const apiString = await fetch(`${API_URL}?key=${KEY}&q=${userValue}&${param}`)
-//     // return apiString
-
-//     return await axios.get(`${API_URL}?key=${KEY}&q=${userValue}&${param}`)
-//         .then(response => response.json())
-        
-// }
-
-// console.log(featchPhoto)
-
-
-// featchPhoto()
-//   .then(apiString => console.log(apiString))
-//   .catch(err => console.error(err))
-
-
-// function searchPhoto(pictures) {
-//   const markup = data 
-//     .map(({webformatURL, largeImageURL, tags, likes, views, comments, downloads}) =>
-//         `<div class="photo-card">
-//             <img src="" alt="${tags}" loading="lazy" />
-//             <div class="info">
-//               <p class="info-item">
-//                 <b>Likes</b>${likes}
-//               </p>
-//               <p class="info-item">
-//                 <b>Views</b>${views}
-//               </p>
-//               <p class="info-item">
-//                 <b>Comments</b>${comments}
-//               </p>
-//               <p class="info-item">
-//                 <b>Downloads</b>${downloads}
-//               </p>
-//             </div>
-//           </div>`
-//     )
-//     .join('')
-//     divEl.innerHTML = markup;
-// }
-
-
-
-
-
-
-
-
-
-
-// webformatURL - link do małego obrazka.
-// largeImageURL - link do dużego obrazka.
-// tags - wiersz z opisem obrazka. Będzie pasować do atrybutu alt.
-// likes - liczba “lajków”.
-// views - liczba wyświetleń.
-// comments - liczba komentarzy.
-// downloads - liczba pobrań.
-
-////////.................//////////////////
-
-//  "Sorry, there are no images matching your search query. Please try again."
-
-
- //////////////..................////////////////
-
-
-
-
-
-
-
-
-// Utwórz frontend aplikacji wyszukiwania i przeglądania obrazków według słów kluczowych. //
-
-
-
-
-
-// bibl.////
-// axios   notiflix
-
-
-//async/await
-
-
-//API Pixabay
-
-
-
-
-// const featchPhoto = async (userValue) => {
-//   const API_URL = 'https://pixabay.com/api/';
-//   const KEY = '36240096-2eba6952fadc15ce6318a051b';
-//   const userValue = inputEl.value;
-//   // const valExp = 'dog'
-//   // const userValue = valExp
-//   const param = 'imagine_type=photo&orientation=horizontal&safesearch=true';
-
-//   // const apiString = await fetch(`${API_URL}?key=${KEY}&q=${userValue}&${param}`)
-//   // return apiString
-
-//   return await axios.get(`${API_URL}?key=${KEY}&q=${userValue}&${param}`)
-//       .then(response => response.json())
-      
-// }
-
-// console.log(featchPhoto)
-
-
-
+function alertImagesFound(data) {
+  Notiflix.Notify.success(`Hooray! We found ${data.totalHits} images.`);
+}
+
+function alertNoEmptySearch() {
+  Notiflix.Notify.failure('The search string cannot be empty. Please specify your search query.');
+}
+
+function alertNoImagesFound() {
+  Notiflix.Notify.failure(
+    'Sorry, there are no images matching your search query. Please try again.',
+  );
+}
+
+function alertEndOfSearch() {
+  Notiflix.Notify.failure("We're sorry, but you've reached the end of search results.");
+}
 
