@@ -28,4 +28,5 @@ function galleryMarkup(images) {
     )
     .join('')
     divEl.innerHTML = markup
+    // divEl.insertAdjacentHTML('beforeend', markup)
 }

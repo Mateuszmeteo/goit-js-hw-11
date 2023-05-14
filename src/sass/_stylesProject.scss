@@ -1,6 +1,27 @@
+.form-div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(222, 184, 135, 0.4);
+    height: 40px;
+    
+}
+
+
+
+
+
+.gallery-div {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+
 .gallery {
     gap: 10px;
     display: flex;
+    justify-content: center;
     // flex-direction: row;
     flex-wrap: wrap;
 }
