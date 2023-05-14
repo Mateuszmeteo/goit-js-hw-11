@@ -3,7 +3,7 @@ import Notiflix from "notiflix";
 import { searchPhoto } from "./js/searchPhoto";
 import { galleryMarkup } from "./js/galleryMarkup";
 
-console.log('uytf')
+// console.log('uytf')
 
 const btnLoad = document.querySelector('.load-more')
 const formEl = document.getElementById('search-form')
