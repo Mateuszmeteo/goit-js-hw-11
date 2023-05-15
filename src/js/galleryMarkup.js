@@ -27,6 +27,10 @@ function galleryMarkup(images) {
           </div>`
     )
     .join('')
-    divEl.innerHTML = markup
-    // divEl.insertAdjacentHTML('beforeend', markup)
+    
+    divEl.insertAdjacentHTML('beforeend', markup)
 }
+
+
+
+// divEl.innerHTML = markup // przy load-more nie dodaje nowych page tylko zastępuje stare

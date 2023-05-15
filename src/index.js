@@ -17,7 +17,7 @@ const perPage = 40;
 formEl.addEventListener('submit', onSearchForm);
 btnLoad.addEventListener('click', loadMorePhoto);
 
-// btnLoad.classList.add('btn-hidden') //nie działa
+btnLoad.classList.add('btn-hidden') //nie działa
 
 function onSearchForm(e) {
   e.preventDefault();
@@ -37,6 +37,7 @@ function onSearchForm(e) {
       } else {
         galleryMarkup(data.hits);
         alertFound(data);
+        btnLoad.classList.remove('btn-hidden')
       }
     })
     .catch(error => console.log(error))
